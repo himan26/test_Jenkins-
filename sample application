@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from Git repository
+                git 'https://github.com/your-username/your-repo.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Build Java project using Maven
+                script {
+                    def mvnHome = tool 'Maven'
+                    sh "${mvnHome}/bin/mvn clean install"
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run tests
+                script {
+                    def mvnHome = tool 'Maven'
+                    sh "${mvnHome}/bin/mvn test"
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Your deployment steps go here
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline successfully executed! Deploying to production...'
+            // Add additional deployment steps for successful builds
+        }
+
+        failure {
+            echo 'Pipeline failed! Notify the team and investigate...'
+            // Add notification or other actions for failed builds
+        }
+    }
+}
